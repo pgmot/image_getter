@@ -4,6 +4,7 @@
 import urllib2
 import threading, Queue
 import sys, os
+import os.path
 from HTMLParser import HTMLParser
 
 url_queue = Queue.Queue()
@@ -41,14 +42,15 @@ class ImgParser(HTMLParser):
         HTMLParser.__init__(self)
 
     def handle_starttag(self, tagname, attribute):
-        if tagname.lower() == "img":
+        if tagname.lower() == "a":
             for i in attribute:
-                if i[0].lower() == "src":
-                    url_queue.put(i[1])
-                    print i[1]
+                if i[0].lower() == "href":
+                    root, ext = os.path.splitext(i[1])
+                    if ext == ".jpg":
+                        url_queue.put(i[1])
+                        print i[1]
 
 if __name__ == "__main__":
-#    url = "http://kizitora.doorblog.jp/archives/20778853.html"
     if len(sys.argv) < 2:
         print 'Usage: python %s <urlname> [<save_dir>]' % sys.argv[0]
         quit()
@@ -68,7 +70,7 @@ if __name__ == "__main__":
     parser.close()
     htmldata.close()
 
-    MAX_THREAD = 2
+    MAX_THREAD = 4
     threads = []
     for n in range(MAX_THREAD):
         threads.append(ImgDownloader())
