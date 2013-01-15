@@ -48,7 +48,6 @@ class ImgParser(HTMLParser):
                     print i[1]
 
 if __name__ == "__main__":
-#    url = "http://kizitora.doorblog.jp/archives/20778853.html"
     if len(sys.argv) < 2:
         print 'Usage: python %s <urlname> [<save_dir>]' % sys.argv[0]
         quit()
